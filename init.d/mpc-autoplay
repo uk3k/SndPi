@@ -90,6 +90,11 @@ case "$1" in
         while true; do
                 if ! ping -c 1 -w 1 $Host > /dev/null; then ((wait++))
                         echo -e -n "waiting for response from Streamserver: $wait \r" | tee -a $log
+                            if [ "$wait" -gt "$Timeout" ]
+                                then
+                                    echo "$date - Connection to Streamserver timed out" | tee -a $log
+                                    break
+                            fi                        
                 else
                         echo ""
                         echo "checking for Streamserver: running!" | tee -a $log
@@ -103,6 +108,11 @@ case "$1" in
                         while true; do
                                 if mpc | grep ERROR > /dev/null; then ((wait++))
                                         echo -e -n "waiting for stream to become ready: $wait \r" | tee -a $log
+                                if [ "$wait" -gt "$Timeout" ]
+                                    then
+                                        echo "$date - Connection to Streamserver timed out" | tee -a $log
+                                        break
+                                fi                                        
                                         mpc play | tee -a $log > /dev/null
                                         sleep $Interval
                                 else
