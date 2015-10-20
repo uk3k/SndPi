@@ -128,11 +128,50 @@ case "$1" in
                 fi;
                 sleep $Interval;
         done
+        ;;    
     status)
         echo "Your personal MPC status:" && mpc
         ;;
+    check)
+    if [ -z "$(mpc | grep "$Stream")" ]
+        then
+        while true; do
+                if ! ping -c 1 -w 1 $Host > /dev/null; then ((wait++))
+                        echo -e -n "waiting for response from Streamserver: $wait \r" | tee -a $log
+                else
+                        echo ""
+                        echo "checking for Streamserver: running!" | tee -a $log
+                        echo "starting MPC..." | tee -a $log
+                        mpc clear > /dev/null
+                        mpc repeat on > /dev/null
+                        mpc add http://$Host:$Port/$Stream | tee -a $log > /dev/null
+                        mpc play | tee -a $log > /dev/null
+                        sleep 2 #wait for stream-name
+                        wait=0 #reset wait counter
+                        while true; do
+                                if mpc | grep ERROR > /dev/null; then ((wait++))
+                                        echo -e -n "waiting for stream to become ready: $wait \r" | tee -a $log
+                                        mpc play | tee -a $log > /dev/null
+                                        sleep $Interval
+                                else
+                                        echo ""
+                                        echo "MPC Status:" | tee -a $log
+                                        mpc | tee -a $log
+                                        echo "success!" | tee -a $log > /dev/null
+                                        echo "--------------------------------" | tee -a $log > /dev/null
+                                        echo "" | tee -a $log > /dev/null
+                                exit 0
+                                fi;
+                        done
+                fi;
+                sleep $Interval;
+        done
+        else
+            exit 0
+    fi
+    ;;
     *)
-        echo "Usage: $0 start|stop|restart|status"
+        echo "Usage: $0 start|stop|restart|status|check"
         exit 2
         ;;
 esac
