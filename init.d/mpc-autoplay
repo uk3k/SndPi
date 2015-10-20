@@ -1,14 +1,14 @@
 #!/bin/bash
 
 ### BEGIN INIT INFO
-# Provides:          mpd-autoplay
-# Required-Start:    mpd
+# Provides:          mpc-autoplay
+# Required-Start:    mpc
 # Required-Stop:
 # Should-Start:
 # Should-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Ensures that mpd plays on startup
+# Short-Description: Ensures that mpc plays on startup
 # Description:       Start an Icecast stream after startup
 ### END INIT INFO
 #
