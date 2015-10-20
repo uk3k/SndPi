@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ### BEGIN INIT INFO
-# Provides:          mpc-autoplay
-# Required-Start:    mpc
+# Provides:          mpd-autoplay
+# Required-Start:    mpd
 # Required-Stop:
 # Should-Start:
 # Should-Stop:
@@ -12,9 +12,9 @@
 # Description:       Start an Icecast stream after startup
 ### END INIT INFO
 #
-#IP of Icecast Server Neckartailfingen
+#IP of Icecast Server 1
 Host="192.168.1.200"
-#IP of Icecast Server Crinitz
+#IP of Icecast Server 2
 #Host="192.168.2.200"
 #Port of Icecast Server
 Port="8000"
@@ -22,6 +22,8 @@ Port="8000"
 Stream="Crinitz"
 #duration between pings
 Interval=1
+#timeout
+Timeout=30
 #reset wait-counter
 wait=0
 #logfile
@@ -37,6 +39,11 @@ case "$1" in
         while true; do
                 if ! ping -c 1 -w 1 $Host > /dev/null; then ((wait++))
                         echo -e -n "waiting for response from Streamserver: $wait \r" | tee -a $log
+                            if [ "$wait" -gt "$Timeout" ]
+                                then
+                                    echo "$date - Connection to Streamserver timed out" | tee -a $log
+                                    break
+                            fi        
                 else
                         echo ""
                         echo "checking for Streamserver: running!" | tee -a $log
