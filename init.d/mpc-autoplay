@@ -35,7 +35,7 @@ date=$(date)
 
 case "$1" in
     start)
-        if [ -z "$(mpc | grep "$Stream")" ]
+        if [ -z "$(mpc | grep playing)" ]
         then
         echo "$date - MPC start" | tee $log > /dev/null
         while true; do
@@ -139,7 +139,7 @@ case "$1" in
         echo "Your personal MPC status:" && mpc
         ;;
     check)
-    if [ -z "$(mpc | grep "$Stream")" ]
+    if [ -z "$(mpc | grep playing)" ]
         then
         while true; do
                 if ! ping -c 1 -w 1 $Host > /dev/null; then ((wait++))
