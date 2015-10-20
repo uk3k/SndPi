@@ -77,7 +77,8 @@ case "$1" in
         else
         echo "Stream is allready playing:"
         mpc
-        exit 0
+        fi
+        ;;
     stop)
         echo "stopping MPC..."
         mpc stop > /dev/null
@@ -133,6 +134,7 @@ case "$1" in
                 fi;
                 sleep $Interval;
         done
+        ;;
     status)
         echo "Your personal MPC status:" && mpc
         ;;
