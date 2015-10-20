@@ -35,6 +35,8 @@ date=$(date)
 
 case "$1" in
     start)
+        if [ -z "$(mpc | grep "$Stream")" ]
+        then
         echo "$date - MPC start" | tee $log > /dev/null
         while true; do
                 if ! ping -c 1 -w 1 $Host > /dev/null; then ((wait++))
@@ -72,9 +74,13 @@ case "$1" in
                 fi;
                 sleep $Interval;
         done
+        else
+        echo "Stream is allready playing:"
+        mpc
+        exit 0
         ;;
     stop)
-        echo "stopping mpc..."
+        echo "stopping MPC..."
         mpc stop > /dev/null
         mpc clear > /dev/null
         mpc repeat off > /dev/null
@@ -157,7 +163,7 @@ case "$1" in
                                         echo ""
                                         echo "MPC Status:" | tee -a $log
                                         mpc | tee -a $log
-                                        echo "success!" | tee -a $log > /dev/null
+                                        echo "Stream successfully re-established!" | tee -a $log > /dev/null
                                         echo "--------------------------------" | tee -a $log > /dev/null
                                         echo "" | tee -a $log > /dev/null
                                 exit 0
@@ -167,6 +173,7 @@ case "$1" in
                 sleep $Interval;
         done
         else
+            echo "Everything is fine!"
             exit 0
     fi
     ;;
