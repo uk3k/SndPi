@@ -134,7 +134,6 @@ case "$1" in
                 fi;
                 sleep $Interval;
         done
-        ;;    
     status)
         echo "Your personal MPC status:" && mpc
         ;;
