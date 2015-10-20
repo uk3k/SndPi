@@ -78,7 +78,6 @@ case "$1" in
         echo "Stream is allready playing:"
         mpc
         exit 0
-        ;;
     stop)
         echo "stopping MPC..."
         mpc stop > /dev/null
